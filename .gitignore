@@ -1,3 +1,21 @@
+# Uncentral dirs
+uncentral/share
+uncentral/tmp
+
+# SQLite database files
+*.db
+*.sqlite
+*.sqlite3
+
+# SQLite backup files
+*.db-journal
+*.sqlite-journal
+*.sqlite3-journal
+
+# Other potential SQLite files
+*.db-shm
+*.db-wal
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
