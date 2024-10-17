@@ -22,7 +22,11 @@ DOWNLOAD_QUEUE_TABLE = '''
 class DownloadQueue():
     def __init__(self):
         current_dir = os.getcwd()
-        db_filename = f'{current_dir}/db/download_queue.db'
+        db_dir = f'{current_dir}/db'
+        db_filename = f'{db_dir}/download_queue.db'
+
+        if not os.path.isdir(db_dir):
+            os.makedirs(db_dir)
 
         self.__db = Database()
         self.__db.filename = db_filename
