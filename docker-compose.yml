@@ -1,0 +1,39 @@
+version: '3.3'
+
+services:
+  uncentral-1:
+    build: .
+    image: "uncentral:latest"
+    ports:
+      - "6699:6699"
+    environment:
+      - DISPLAY=$DISPLAY
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    networks:
+       uncentral-network-1:
+           ipv4_address: 10.100.10.5
+  uncentral-2:
+    build: .
+    image: "uncentral:latest"
+    ports:
+      - "6698:6699"
+    environment:
+      - DISPLAY=$DISPLAY
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    networks:
+       uncentral-network-2:
+           ipv4_address: 10.100.20.15
+
+networks:
+  uncentral-network-1:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.100.10.0/24
+  uncentral-network-2:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.100.20.0/24
