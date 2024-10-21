@@ -3,9 +3,13 @@
 #
 
 import os
+import re
 import string
 import random
 import shutil
+import http.client
+
+from modules.config import HTTP_ADDR_LOOKUP
 
 
 def gen_random_alpha(length: int = 10):
@@ -46,3 +50,28 @@ def move_file(src, dst):
 
     # Move the file
     shutil.move(src, dst)
+
+
+def http_get(host: str, port: int = 80, endpoint: str = '/', 
+             ssl: bool = False, timeout: int = 5):
+    """HTTP client to send requests to web servers.
+    
+    """
+    conn = None
+    data = None
+
+    if ssl:
+        conn = http.client.HTTPSConnection(host, port, timeout=timeout)
+    else:
+        conn = http.client.HTTPConnection(host, port, timeout=timeout)
+    
+    conn.request('GET', endpoint)
+
+    resp = conn.getresponse()
+   
+    if resp.status == 200:
+        data = resp.read().decode()
+    
+    conn.close()
+
+    return data

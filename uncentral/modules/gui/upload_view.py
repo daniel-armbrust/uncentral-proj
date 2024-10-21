@@ -7,7 +7,7 @@ from time import sleep
 import tkinter as tk
 from tkinter import ttk
 
-from .thread_control import THREAD_CONTROL, THREAD_SLEEP
+from modules.config import THREAD_CONTROL, THREAD_SLEEP
 from modules.queue.upload_queue import UploadQueue
 
 class UploadView():

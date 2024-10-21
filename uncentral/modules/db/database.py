@@ -1,5 +1,5 @@
 #
-# modules/queue/database.py
+# modules/db/database.py
 #
 
 import sqlite3
@@ -15,11 +15,13 @@ class Database():
     @filename.setter
     def filename(self, value: str):        
         self.__filename = value
-        self.__conn = sqlite3.connect(self.__filename)       
-    
+        self.__conn = sqlite3.connect(self.__filename)          
+   
     def __del__(self):
-        if self.__conn:
+        try:
             self.__conn.close()
+        except (sqlite3.Error, sqlite3.ProgrammingError,):
+            pass
     
     def __select(self, sql: str):
         row = None
@@ -32,7 +34,8 @@ class Database():
         return row
 
     def __commit(self, sql: str):
-        new_id = None        
+        new_id = None   
+        cursor = None     
 
         try:
             cursor = self.__conn.execute(sql)
@@ -42,16 +45,26 @@ class Database():
         except sqlite3.Error as e:
             print(f'An error occurred: {e}')
             self.__conn.rollback()            
-        finally:
+        
+        if cursor:
             cursor.close()        
         
         return new_id        
     
     def create(self, ddl: str):        
-        new_id = self.__commit(ddl)
+        cursor = None
 
-        return new_id        
+        try:
+            cursor = self.__conn.execute(ddl)
+        except sqlite3.Error as e:
+            print(f'An error occurred: {e}')
+        
+        if cursor:
+            cursor.close()
 
+    def exec(self, sql: str):
+        self.__commit(sql)
+        
     def add(self, sql: str):
         new_id = self.__commit(sql)
 

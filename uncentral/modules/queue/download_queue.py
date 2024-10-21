@@ -2,32 +2,14 @@
 # modules/queue/download_queue.py
 #
 
-import os
+from modules.config import APP_DIRS, DOWNLOAD_QUEUE_TABLE
+from modules.db.database import Database
 
-from .database import Database
 
-DOWNLOAD_QUEUE_TABLE = '''
-    CREATE TABLE IF NOT EXISTS download_queue (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        filename TEXT NOT NULL,
-        tmp_filename TEXT NOT NULL,
-        file_size REAL,
-        user TEXT,
-        status TEXT CHECK(status IN ('Downloading', 'Getting Info', 'Error', 'Canceled', 'Completed')) NOT NULL,
-        rate REAL,
-        progress REAL,
-        time_left INTEGER);
-'''
-
-class DownloadQueue():
-    def __init__(self):
-        current_dir = os.getcwd()
-        db_dir = f'{current_dir}/db'
-        db_filename = f'{db_dir}/download_queue.db'
-
-        if not os.path.isdir(db_dir):
-            os.makedirs(db_dir)
-
+class DownloadQueue():    
+    def __init__(self):                       
+        db_filename = f"{APP_DIRS['db']}/download_queue.db"
+        
         self.__db = Database()
         self.__db.filename = db_filename
         self.__db.create(DOWNLOAD_QUEUE_TABLE)

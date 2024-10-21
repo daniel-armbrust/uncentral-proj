@@ -7,7 +7,7 @@ from time import sleep
 import tkinter as tk
 from tkinter import ttk
 
-from .thread_control import THREAD_CONTROL, THREAD_SLEEP
+from modules.config import THREAD_CONTROL, THREAD_SLEEP
 from modules.queue.download_queue import DownloadQueue
 
 class DownloadView():
@@ -57,8 +57,7 @@ class DownloadView():
         
         while THREAD_CONTROL['transfer']:
             download_list = download_queue.list()            
-            self.__main_window.after(0, self.__update_screen, download_list)
-
+            self.__main_window.after(0, self.__update_screen, download_list)            
             sleep(THREAD_SLEEP)
 
     def show(self):

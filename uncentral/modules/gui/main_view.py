@@ -6,7 +6,7 @@ import tkinter as tk
 
 from .download_view import DownloadView
 from .upload_view import UploadView
-from .thread_control import THREAD_CONTROL
+from modules.config import THREAD_CONTROL
 
 class MainView():
     __main_window = None

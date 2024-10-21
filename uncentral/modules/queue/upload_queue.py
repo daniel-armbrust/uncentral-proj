@@ -2,39 +2,17 @@
 # modules/queue/upload_queue.py
 #
 
-import os
-import sqlite3
+from modules.config import APP_DIRS, UPLOAD_QUEUE_TABLE
+from modules.db.database import Database
 
-UPLOAD_QUEUE_TABLE = '''
-    CREATE TABLE IF NOT EXISTS upload_queue (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        filename TEXT NOT NULL,
-        file_size REAL NOT NULL,
-        user TEXT TNOT NULL,
-        status TEXT CHECK(status IN ('Uploading', 'Error', 'Canceled', 'Finish')) NOT NULL,
-        rate REAL NOT NULL,
-        progress REAL NOT NULL,
-        time_left INTEGER NOT NULL);
-'''
 
-class UploadQueue():
-    __db_filename = None
-
-    def __init__(self):
-        current_dir = os.getcwd()
-        self.__db_filename = f'{current_dir}/db/upload_queue.db'
-
-        if not os.path.exists(self.__db_filename):
-            self.__create_db()
-    
-    def __create_db(self):
-        conn = sqlite3.connect(self.__db_filename)
-
-        cursor = conn.execute(UPLOAD_QUEUE_TABLE)
-        conn.commit()
-
-        cursor.close()
-        conn.close()
+class UploadQueue():    
+    def __init__(self):                       
+        db_filename = f"{APP_DIRS['db']}/upload_queue.db"
+        
+        self.__db = Database()
+        self.__db.filename = db_filename
+        self.__db.create(UPLOAD_QUEUE_TABLE)
     
     def list(self):
         sql = '''
@@ -43,14 +21,26 @@ class UploadQueue():
             FROM upload_queue WHERE status != 'Finish'
         '''
 
-        conn = sqlite3.connect(self.__db_filename)
-
-        cursor = conn.cursor()
-        cursor.execute(sql)
-
-        rows = cursor.fetchall()        
-
-        cursor.close()
-        conn.close()
+        rows = self.__db.list(sql)
 
         return rows
+    
+    def get(self):
+        pass    
+    
+    def add_uploading(self, filename: str, tmp_filename: str):
+        sql = f'''
+            INSERT INTO upload_queue (filename, tmp_filename, status)
+                VALUES ("{filename}", "{tmp_filename}", "Downloading")
+        '''
+
+        row_id = self.__db.create(sql)
+
+        return row_id
+    
+    def update_completed(self, id: int):
+        sql = f'''
+            UPDATE upload_queue SET status = "Completed" WHERE id = "{id}"                            
+        '''
+
+        self.__db.update(sql)
