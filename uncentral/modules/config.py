@@ -14,8 +14,8 @@ THREAD_CONTROL = {
 
 THREAD_SLEEP = 2
 
-# Sleep time for discovery of my own IP Address.
-THREAD_SLEEP_DISCOVERY_MY_IP = 10
+# Sleep time in seconds for discovery of my own IP Address.
+THREAD_SLEEP_DISCOVERY_MY_IP = 300
 
 DOWNLOAD_QUEUE_TABLE = '''
     CREATE TABLE IF NOT EXISTS download_queue (

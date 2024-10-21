@@ -18,10 +18,8 @@ class Database():
         self.__conn = sqlite3.connect(self.__filename)          
    
     def __del__(self):
-        try:
+        if self.__conn:
             self.__conn.close()
-        except (sqlite3.Error, sqlite3.ProgrammingError,):
-            pass
     
     def __select(self, sql: str):
         row = None
@@ -64,7 +62,7 @@ class Database():
 
     def exec(self, sql: str):
         self.__commit(sql)
-        
+
     def add(self, sql: str):
         new_id = self.__commit(sql)
 

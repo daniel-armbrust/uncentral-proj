@@ -83,8 +83,11 @@ def discovery_thread():
            '''
 
            db.add(sql)
+        else:
+           # TODO: logging
+           pass
 
-           sleep(THREAD_SLEEP_DISCOVERY_MY_IP)    
+        sleep(THREAD_SLEEP_DISCOVERY_MY_IP)    
 
 
 def start_myip_discovery():

@@ -63,11 +63,13 @@ def http_get(host: str, port: int = 80, endpoint: str = '/',
     if ssl:
         conn = http.client.HTTPSConnection(host, port, timeout=timeout)
     else:
-        conn = http.client.HTTPConnection(host, port, timeout=timeout)
+        conn = http.client.HTTPConnection(host, port, timeout=timeout)   
     
-    conn.request('GET', endpoint)
-
-    resp = conn.getresponse()
+    try:
+        conn.request('GET', endpoint)
+        resp = conn.getresponse()
+    except Exception:
+        return None
    
     if resp.status == 200:
         data = resp.read().decode()
